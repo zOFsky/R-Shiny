@@ -20,10 +20,12 @@ ui <- fluidPage(
     mainPanel("main panel",
               DT::dataTableOutput("mytable"),
               plotOutput("plot1"),
-              selectInput("varX", h5("Select var for X axis"), 
-                          choices = car_variables),
-              selectInput("varY", h5("Select var for Y axis"), 
-                          choices = car_variables)
+              uiOutput("ui1"),
+              uiOutput("ui2")
+              # selectInput("varX", h5("Select var for X axis"), 
+              #             choices = car_variables),
+              # selectInput("varY", h5("Select var for Y axis"), 
+              #             choices = car_variables)
               )
   )
 )
@@ -35,9 +37,6 @@ server <- function(input, output) {
     mtcars[, c(input$varX, input$varY)]
   })
   
-  waitForClick <- eventReactive(input$displayBtn, {
-    selectedData()
-  })
   
   output$mytable = DT::renderDataTable({
     data <- mtcars
@@ -45,11 +44,26 @@ server <- function(input, output) {
     data
   })
   
+  
+  
   observeEvent(input$displayBtn, {
+    
     output$plot1 <- renderPlot({
       plot(selectedData())
-      
     })
+    
+    output$ui1 <- renderUI({
+      
+      selectInput("varX", h5("Select var for X axis"), 
+                  choices = car_variables)
+    })
+    
+    output$ui2 <- renderUI({
+      
+      selectInput("varY", h5("Select var for Y axis"), 
+                  choices = car_variables)
+    })
+    
   })
   
 }
