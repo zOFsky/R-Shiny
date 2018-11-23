@@ -45,10 +45,13 @@ server <- function(input, output) {
     data
   })
   
-  output$plot1 <- renderPlot({
-    plot(selectedData())
+  observeEvent(input$displayBtn, {
+    output$plot1 <- renderPlot({
+      plot(selectedData())
       
+    })
   })
+  
 }
 
 shinyApp(ui = ui, server = server)
